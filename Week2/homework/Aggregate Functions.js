@@ -17,6 +17,7 @@ WHERE gender = 'f' `,
 `SELECT university, AVG(h_index)
  FROM authors 
  GROUP BY university;`,
+ 
  //Average of the h-index fo all authors per university 
  `SELECT university, count(paper_title) 
  FROM research_papers 
@@ -29,7 +30,9 @@ JOIN authors
 ON research_papers.author_no = authors.author_no 
 Group by university;`
 //Minimum and maximum of the h-index of all authors per university.
-
+`SELECT university, min(h_index), max(h_index) 
+FROM authors 
+GROUP BY university;`
  ]
 
  for(var i in queries){

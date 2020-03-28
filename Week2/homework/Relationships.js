@@ -1,9 +1,14 @@
 
+// 3. Read exercises 3 and 4 and then add information (insert rows) of 15 authors and 30 research papers such that
+// all queries in the exercises  3 and 4 will return some answers
+
 /*/////--------------notes
 -
  to avoid writing the date myself I used some packages that produces random data :)
  -
  ----------------------------------------////////*/
+// 1. Create another table, called `Research_Papers` with the following fields: 
+// `(paper_id, paper_title, conference, publish_date, ...)`
 
 // Generates random dates
 let DateGenerator = require('random-date-generator');
@@ -93,6 +98,19 @@ const create_table_Research_Papers =
     PRIMARY KEY(paper_id),
     CONSTRAINT author_no FOREIGN KEY (author_no)REFERENCES authors(author_no) )` ;
 
+// 2. What is the relationship between Authors and Research papers ? Make necessary changes to `Authors` and
+// `Research_Papers` tables and add more tables if necessary.
+// The relationship is many to many this is why I am creating another table.
+const create_table_Research_Papers_authors = 
+`CREATE TABLE research_papers_authors
+    (author_no int,
+    paper_id int,
+    CONSTRAINT FK_author_no FOREIGN KEY (author_no) REFERENCES authors(author_no),
+    CONSTRAINT FK_paper_id FOREIGN KEY (paper_id) REFERENCES research_papers(paper_id));`
+
+
+const insert_into_cross_table = `
+insert into research_papers_authors (paper_id, author_no) select paper_id, author_no from research_papers;`
 
 
 //mysql functions 
@@ -105,6 +123,15 @@ connection.query( create_table_Research_Papers, function (error, result, fields)
         }
         console.log(`The reply is`, result);
     })
+
+//Creates table Research papers and authors 
+connection.query( create_table_Research_Papers_authors, function (error, result, fields) {
+    if (error) {
+        throw error;
+    }
+    console.log(`The reply is`, result);
+})
+
 
 //inserts info into authors
 for(var i in insert_queries_authors){
@@ -128,6 +155,14 @@ for(var i in insert_queries_research_papers){
     });
 }
 
+//inserts info into research papers authors cross table 
+
+connection.query( insert_into_cross_table, function (error, result, fields) {
+    if (error) {
+        throw error;
+    }
+    console.log(`The reply is`, result);
+})
  connection.end();
 
 
