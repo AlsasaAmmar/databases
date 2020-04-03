@@ -8,6 +8,8 @@ var connection = mysql.createConnection({
 });
 
 const queries = [
+// All research papers and the number of authors that wrote that paper. 
+`SELECT a.author_no, count(paper_id) from AUTHORS as a join research_papers_authors AS b on a.author_no = b.author_no GROUP BY author_no;`
 //sum of the research papers published by all female authors 
 `SELECT count(paper_title)
 FROM research_papers
